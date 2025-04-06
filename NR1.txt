@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Namaste React</title>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <script>
+    // Styling object
+    const headingStyle = {
+      color: "teal",
+      fontSize: "36px",
+      fontFamily: "Arial",
+      textAlign: "center",
+    };
+
+    // Click handler function
+    function handleClick() {
+      alert("You clicked the React Button!");
+    }
+
+    // Create a heading element with styles
+    const heading = React.createElement("h1", { style: headingStyle }, "Hello World from React!");
+
+    // Create a button with event handler
+    const button = React.createElement(
+      "button",
+      {
+        onClick: handleClick,
+        style: {
+          padding: "10px 20px",
+          backgroundColor: "crimson",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          marginTop: "20px",
+          display: "block",
+          marginLeft: "auto",
+          marginRight: "auto"
+        },
+      },
+      "Click Me"
+    );
+
+    // Create a container div to hold both heading and button
+    const container = React.createElement("div", null, [heading, button]);
+
+    // Render everything
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(container);
+  </script>
+</body>
+</html>
+
+
+🔷 What is React?
+React is a JavaScript library for building user interfaces (UIs).
+It helps developers create fast, interactive, and reusable UI components efficiently.
+
+🔷 What is React.createElement()? --> It returns a virtual DOM object, not a real DOM element yet.
+
+This is how React creates elements in memory.
+React.createElement("h1", { style: {...} }, "Hello World!");
+
+React.createElement(type, props, children)
+
+Parameter	Description
+type	    Tag name (div, h1, button, etc.)
+props	    Object with attributes (style, onClick, etc.)
+children	The content (text or nested elements)
+
+🔷 What is ReactDOM?-->
+
+React has two libraries:
+
+react – core logic (creating elements, components, state, etc.)
+react-dom – interacts with the browser DOM (rendering components on screen)
+
+🔷 What is ReactDOM.createRoot()? --> It's the entry point in my HTML
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+🔷 What is root.render()? --> Whatever virtual DOM we created using React.createElement(), it now gets converted into real DOM and shown on screen.
+
+root.render(ReactElement);
+
+🔷 What is crossorigin in <script> tag?
+crossorigin is an attribute that tells the browser to load external resources/scripts (like React from a CDN) safely and securely, even if they come from a different domain.
+
+🔸 Why is it necessary?--> 
+Allows better error reporting (especially for debugging)
+Follows CORS (Cross-Origin Resource Sharing) rules
+Ensures security when loading scripts from other websites (like CDNs)
+
+✅ What is a CDN?
+It’s a network of servers located around the world that quickly deliver files (like images, CSS, JS, videos, etc.) to users based on their location.
+
+🔁 Bonus Analogy:
+Think of a CDN like a chain of pizza outlets 🍕 all over the world —
+Instead of always ordering from the main kitchen in New York, you get it from the nearest branch in Pune.
+Faster, hotter, and smoother delivery!
+
+🚀 Why CDNs are Used:
+⚡ Faster loading times
+🌐 Global performance
+🔐 More secure delivery
+🛡️ Protection from traffic spikes (e.g., during product launches)
+🎯 Reduces server load on the original site
+
+🤔 What if all the files are stored on a New York server, and the entire population of Pune tries to access the same files at the same time?
+
+🌐 What Actually Happens (Real-Time Delivery): [ Without CDN ]
+If files were only on the New York server and everyone in Pune tried accessing them simultaneously, here’s what would happen without a CDN:
+🐢 Massive delay due to network distance (latency)
+💥 Server overload — it might crash under too many requests
+😓 Poor user experience (slow loading, failed requests)
+
+⚙️ Real-Time Delivery via CDN
+Edge Caching:
+  The first user from Pune requests the file — it comes from New York.
+  The CDN stores (caches) it on the nearest server (Pune/Mumbai/Delhi).
+  Now, when others request the same file, it’s served from this local server — super fast.
+
+Chunk-Based Delivery (Not All at Once):
+  Assets are delivered in chunks, not as one big package.
+  HTTP/1.1 or HTTP/2 streams parts of the data, so the browser starts rendering without waiting for everything.
+
+Priority Order for Loading Assets:
+
+Priority	Asset Type	   Why?
+🔥 High   	HTML	        To start rendering the page layout.
+⚡ High	    CSS	            To style the page correctly (avoid FOUC - Flash of Unstyled Content).
+⚡ High	   JavaScript	    Needed to add functionality (especially React apps).
+📷 Medium	Images	        Loaded progressively or lazily.
+🎥 Low	   Videos/fonts	    Loaded when required.
+
+
+
+
+🔷 Why is <script> written at the end of the <body>?
+Putting scripts at the end ensures that the HTML loads first before JavaScript runs.
+
+Why?
+If the script is at the top, it blocks rendering until JS is downloaded & executed.
+At the bottom, it allows:
+The page to load faster
+DOM elements (like <div id="root">) to exist before we try to access them using getElementById
