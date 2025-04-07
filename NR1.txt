@@ -78,7 +78,7 @@ type	    Tag name (div, h1, button, etc.)
 props	    Object with attributes (style, onClick, etc.)
 children	The content (text or nested elements)
 
-🔷 What is ReactDOM?-->
+🔷 What is ReactDOM?--> ReactDOM is the part of React that handles rendering your components into the real browser DOM.
 
 React has two libraries:
 
