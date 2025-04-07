@@ -1,0 +1,496 @@
+🔹 What are Chunks?
+Chunks are small pieces of code that a bundler (like Webpack, Vite, Parcel, etc.) splits your application into, instead of creating one large JavaScript file.
+
+🔹 Why Chunks?
+When you build a modern web app, the codebase can become large. If you send all the JavaScript to the browser at once:
+It increases initial load time.
+It blocks rendering.
+It wastes resources if the user doesn't even visit certain parts of the app.
+
+So we split the code into chunks to:
+✅ Improve performance
+✅ Load only what is needed
+✅ Enhance user experience
+
+🔹 Types of Chunks
+👉 Initial Chunks:
+Loaded immediately when the app loads.
+Contains core functionality like index.js, App.js, etc.
+
+👉 Lazy-loaded or Dynamic Chunks:
+Loaded only when needed (like when a user navigates to another page or uses a specific feature).
+Example in React:
+const LazyComponent = React.lazy(() => import('./MyComponent'));
+
+👉 Vendor Chunks:
+Contains third-party libraries like React, Lodash, etc.
+Helps with better caching.
+
+🔹 Chunking Example
+Say your app has:
+
+Homepage (Home.js)
+Dashboard (Dashboard.js)
+Settings (Settings.js)
+
+Instead of putting everything in one bundle.js, the bundler splits them like:
+
+main.chunk.js       -> common code  
+home.chunk.js       -> only for homepage  
+dashboard.chunk.js  -> loaded when dashboard is visited  
+settings.chunk.js   -> loaded when settings page is visited
+
+---------------------------------------------------------------------------------------------------------------------------------------
+🔍 What is Minification?
+Minification is the process of removing all unnecessary characters from your source code without changing its functionality.
+
+🎯 Why Do We Minify?
+✅ To reduce file size
+✅ To speed up loading time & improve performance
+
+📦 What Gets Removed or Changed?
+Original Code	      Minified Code
+Whitespace	          Removed
+Line breaks	          Removed
+Comments	          Removed
+Long variable names	  Shortened
+Unused code	          Eliminated if using tree shaking
+
+Example
+🧾 Original JavaScript
+// This is a simple add function
+function addNumbers(a, b) {
+  return a + b;
+}
+console.log(addNumbers(5, 3));
+
+🪄 Minified JavaScript
+function addNumbers(n,o){return n+o}console.log(addNumbers(5,3));
+
+Webpack will:
+
+👉 Split your code into chunks
+👉 Minify each chunk
+👉 Remove unused code (tree-shaking)
+____________________________________________________________________________________________________________________________________________
+
+🔍 What is Code Splitting?
+Code Splitting is a technique where you split your codebase into smaller bundles (chunks) that can be loaded on demand, instead of loading the entire app in one go.
+
+It helps:
+
+🏎️ Speed up initial load time
+📦 Reduce bundle size
+🚀 Improve performance for large apps
+
+
+🏠 // Home.js
+import React from 'react';
+
+const Home = () => {
+  return <h2>This is the Home Page</h2>;
+};
+
+export default Home; 
+
+🙆‍♂️ // About.js
+import React from 'react';
+
+const About = () => {
+  return <h2>This is the About Page</h2>;
+};
+
+export default About;
+
+
+📇 // Contact.js
+import React from 'react';
+
+const Contact = () => {
+  return <h2>This is the Contact Page</h2>;
+};
+
+export default Contact;
+
+
+⭐️ // App.js
+import React, { Suspense, lazy } from 'react';
+import Contact from "./contact"
+
+// ⬇️ Dynamically import components (creates separate chunks)
+const Home = lazy(() => import('./Home'));
+const About = lazy(() => import('./About'));
+
+function App() {
+  return (
+    <div>
+      <h1>Code Splitting Example</h1>
+
+      {/* ⏳ Suspense handles the fallback while component loads */}
+      <Suspense fallback={<p>Loading Home...</p>}>
+        <Home />
+      </Suspense>
+
+      <Suspense fallback={<p>Loading About...</p>}>
+        <About />
+      </Suspense>
+      
+      <Contact />
+    </div>
+  );
+}
+
+export default App;
+
+✅ What is being code split?
+
+const Home = lazy(() => import('./Home'));
+const About = lazy(() => import('./About'));
+
+👉 These two components (Home and About) are dynamically imported using React.lazy()
+👉 At build time, Webpack or Vite will create separate chunks for each of them
+👉 These chunks are only loaded when rendered
+👉 Code splitting is happening here
+
+❌ What is not being code split?
+ 
+import Contact from "./contact";
+
+📦 This is a static import — which means:
+
+It will be bundled into the main JavaScript file
+It is not lazily loaded
+No code splitting will happen for Contact
+
+____________________________________________________________________________________________________________________________________________
+
+📦 What is Bundler ?
+A bundler is a tool that takes all the files in a project—JavaScript, CSS, images—and bundles them into optimized files that are easier and faster for the browser to load.
+It also performs optimizations like minification, tree shaking, and code splitting, which help improve performance and reduce load time.
+
+Example: Webpack, Parcel, Vite
+
+✅ Features that Actually Optimize Performance
+
+1. Minification --> Removes all unnecessary spaces, comments, and shortens variable names.
+🚀 Result: Smaller file size ⇒ Faster to download.
+
+2. Bundling --> Combines many JS/CSS files into one or a few files.
+🚀 Result: Fewer network requests ⇒ Faster initial load.
+
+3. Code Splitting--> Splits your code into chunks (like per route/component) and loads them when needed.
+🚀 Result: Smaller initial bundle ⇒ Faster startup time.
+
+4. Tree Shaking --> Removes unused code (dead code) from your final bundle.
+🚀 Result: Smaller bundle size ⇒ Faster load time.
+
+5. Compression (e.g., Gzip, Brotli) --> Applies algorithms to further compress bundle files before sending them to the browser.
+🚀 Result: Even faster download ⇒ Reduced data usage.
+
+6. Image Optimization --> Resizes, compresses, or converts images to modern formats (e.g., WebP).
+🚀 Result: Smaller image files ⇒ Much faster load, especially on mobile.
+
+8. Differential Bundling --> Creates modern, smaller bundles for modern browsers and separate ones for older ones.
+🚀 Result: Smaller + faster code for 90% of users.
+
+const greet = (name) => console.log(`Hello, ${name}`);  // ES6+ code
+
+🔁 What bundler does:
+Creates main.modern.js → Uses arrow functions, let/const, etc.
+Creates main.legacy.js → Converts to older syntax using Babel
+
+<!-- Modern bundle for modern browsers -->
+<script type="module" src="main.modern.js"></script>
+
+<!-- Legacy bundle for older browsers -->
+<script nomodule src="main.legacy.js"></script>
+
+9. Scope Hoisting? --> in scope hositng all the small function will be added in 1 scope file without any wrapper
+Just gives you direct, plain JavaScript — as if you had written everything in one file
+
+
+
+
+
+____________________________________________________________________________________________________________________________________________
+🆚 HTTP VS HTTPS
+"HTTP stands for HyperText Transfer Protocol, and it's the basic protocol for sending data between the browser and the server. 
+But the issue with HTTP is that all data is sent in plain text — so anyone in the network can potentially intercept and read it.
+
+HTTPS is the secure version of HTTP. The ‘S’ stands for Secure, and it uses SSL or TLS encryption to protect the data during transmission. 
+When a user visits an HTTPS website, the browser and the server perform a secure handshake and establish an encrypted connection, so even if someone tries to intercept the data, it would be unreadable.
+
+🌐 What is HTTP?
+Whenever you type a website like http://www.fb.com, your browser sends a request to the server and gets back HTML, CSS, JS, images, etc.
+
+But here’s the problem — everything sent using HTTP is plain text.
+
+That means:
+
+Anyone on the same Wi-Fi (like public cafes) can see what you’re doing
+
+Passwords, messages, or payment details can be stolen or modified easily
+
+🔒 What is HTTPS?
+1.Browser asks for a secure connection (starts TLS handshake).
+2.Server sends SSL certificate (includes public key).
+3.Browser creates a secret, encrypts it using the public key, and sends it.
+4.Server decrypts it with its private key.
+5.Both use the same session key to encrypt/decrypt all future data.
+
+____________________________________________________________________________________________________________________________________________
+
+🔹 NPM (Node Package Manager)
+It’s a tool to install packages (libraries/tools) from the npm registry.
+It installs the package into your node_modules folder.
+
+🔹 NPX (Node Package Execute)
+It is used to run packages without installing them globally.
+It downloads and runs the package temporarily, then deletes it.
+
+🔁 Difference in 1 line
+npm installs packages.
+npx runs packages directly.
+____________________________________________________________________________________________________________________________________________
+
+📦 package.json --> It's a file that holds metadata about your project.
+
+🔑 What it contains: Project name, version, description , dependencies, scripts , author, license
+
+🔒 package-lock.json--> It locks the exact versions of every installed package (and their dependencies).
+
+💡 Why it matters:
+Ensures everyone working on the project installs the same versions.
+Makes your builds more stable and predictable.
+
+🔐 Integrity & Hash in package-lock.json--> It's a cryptographic hash (usually SHA-512) of the actual package content that stores a hash value for each package version.
+
+🧪 Situation:
+In your package.json, you have: "axios": "^1.2.0"
+This means:
+npm is allowed to install any version from 1.2.0 up to (but not including) 2.0.0
+
+So depending on when you run npm install, it might install: 1.2.0, 1.2.4, or even 1.3.1
+
+💥 Problem:
+📍Local Machine:
+You run npm install today, and it installs:
+axios@1.2.4
+So everything works perfectly on your machine.
+
+📍Production Server:
+After a week, the production server runs npm install from the same package.json.
+
+But now, the latest available version is: axios@1.3.1
+So production gets 1.3.1, which might include:
+A new bug,
+A breaking change,
+Or a feature that your code doesn’t support.
+
+💣 Result:
+It breaks in production — even though everything worked fine on your local machine.
+
+🛡️ How package-lock.json + integrity solves this
+Now let’s see how the lock file helps.
+
+When you first installed axios@1.2.4, npm created this in package-lock.json:
+
+"axios": {
+  "version": "1.2.4",
+  "resolved": "https://registry.npmjs.org/axios/-/axios-1.2.4.tgz",
+  "integrity": "sha512-abc123..."  ← fingerprint of that tarball
+}
+Now even though package.json says ^1.2.0, the lock file ensures:
+
+Only axios@1.2.4 is downloaded
+
+Its integrity hash is checked — if the code was tampered, npm throws an error
+
+🎯 Final Outcome:
+When your teammate or CI/CD server runs npm install, it doesn't go by ^1.2.0
+
+It uses exact version 1.2.4 with verified integrity
+
+Everyone gets the same exact code, guaranteed
+
+🔑 Summary:
+Even though the version range in package.json allows updates,
+the package-lock.json freezes the version (e.g. 1.2.4) and stores a hash.
+That hash ensures no tampered code or accidental version upgrade slips in.
+
+📌 So:
+"It works on my machine, but not in production" — is solved by this combo of lock + hash.
+
+____________________________________________________________________________________________________________________________________________
+
+Dependencies Types
+
+1. Dependencies: These are packages your app needs to run in production.
+
+"dependencies": {
+  "express": "^4.18.2"
+}
+
+2. DevDependencies ("devDependencies" in package.json): These are packages needed only during development (not in production).
+
+"devDependencies": {
+  "eslint": "^8.0.0",
+  "jest": "^29.0.0"
+}
+
+🧪 Why?
+You use eslint to catch code issues and jest to test your code.
+But users don’t need them when they use your app — they’re for your own use while building.
+
+3. Transitive Dependencies: These are packages your installed packages depend on.
+
+📦 Example: You install axios.
+But internally, axios uses a package like follow-redirects.
+
+So:
+You installed axios → direct dependency
+follow-redirects came along with it → transitive dependency
+
+Version Specifiers
+
+Caret ( ^ ) : Allows only MINOR & PATCH version upgradation automatically.
+
+example: 
+{
+ "dependencies": {
+ "ejs": "^3.3.1"
+ }
+}
+ejs: 3.3.2 // allowed Patch Version fix
+ejs: 3.4.2 // allowed Minor Version fix
+ejs: 4.1.0 // not allowed Major Version fix
+
+2. Tilde ( ~ ) : Allows only PATCH version upgradation automatically.
+
+example: 
+{
+ "dependencies": {
+ "ejs": "~3.3.1"
+ }
+}
+
+ejs: 3.3.2 // allowed Patch Version fix
+ejs: 3.4.2 // not allowed Minor Version fix
+ejs: 4.1.0 // not allowed Major Version fix
+
+3. Equal ( = ) :The = (Equal ) sign in version dependency declarations is used to specify that you want to install the exact version of a package.
+
+{
+ "dependencies": {
+ "ejs": "=3.3.1"
+ }
+}
+
+What if need automatic major/latest update no matter what? --> Use * (Wildcard):
+
+👉 This allows any version — major, minor, patch to install.
+
+"ejs": "*"
+
+____________________________________________________________________________________________________________________________________________
+
+node_modules:
+The folder where all installed packages reside.
+
+.gitignore:
+A file that tells Git which files/folders (like node_modules) to ignore, preventing them from being committed to version control.
+
+____________________________________________________________________________________________________________________________________________
+
+🧠 What is browserslist in package.json?
+It tells tools like Babel, Autoprefixer, and Webpack which browsers or browsers version our project should support.
+
+"browserslist": [
+  "> 0.5%",
+  "last 2 versions",
+  "not dead",
+  "not op_mini all"
+]
+
+🔍 What each part means:
+> 0.5% → Browsers with more than 0.5% market share
+last 2 versions → Last 2 versions of each browser
+not dead → Skip browsers no longer maintained
+not op_mini all → Exclude Opera Mini (since it has issues with modern JS)
+
+🛠️ Why it matters:
+Autoprefixer: Adds necessary CSS prefixes (-webkit, -moz, etc.) so your styles work in older browsers.
+
+Babel: Transpiles your JavaScript to older syntax (like turning let and const into var) based on the browsers you support.
+
+Webpack (or Vite): Can generate different bundles for modern vs. legacy browsers (called differential bundling).
+
+____________________________________________________________________________________________________________________________________________
+
+Modules: A module is any file (like .js, .jsx, .css, etc.) that exports something and can be imported somewhere else to reuse that code or logic.
+
+✨ Why use Modules?
+
+🔁 Reusability: Write once, use anywhere.
+📦 Encapsulation: Keeps code isolated and clean.
+🧠 Better Maintenance: Easier to debug and manage.
+👯‍♂️ Team-Friendly: Code is more structured and shareable.
+
+
+Arthemetic.js
+export function add(a, b) {
+  return a + b;
+}
+
+function sub(a,b){
+    return a-b;
+}
+
+function mul(a,b){
+    return a*b;
+}
+
+
+app.js
+import { add } from './math.js';
+
+console.log(add(2, 3)); // 5
+
+
+____________________________________________________________________________________________________________________________________________
+
+
+GIT command
+
+🔁 1. git clone 👉 Clones a remote repo to your local machine.
+
+🌳 2. git checkout -b 👉 Creates and switches to a new branch.
+
+📂 3. git add 👉 Stages changes for commit.
+
+💬 4. git commit -m 👉 Saves a snapshot of staged changes.
+
+🔼 5. git push 👉 Pushes commits to the remote branch.
+
+🔽 6. git pull 👉 Fetches and merges changes from the remote repo.
+
+🔍 7. git status 👉 Shows current branch, staged/unstaged files, etc.
+
+🧠 8. git log --oneline 👉 Shows commit history in short format.
+
+🔁 9. git stash 👉 Temporarily stores changes without committing.
+
+🔄 10. git merge 👉 Merges one branch into another.
+
+💣 11. git reset --hard 👉 Discards all local changes
+
+🧹 12. git clean -f 👉 Deletes untracked files from your working directory.
+
+13. git clean -n 👉 This shows you which files will be deleted without actually deleting them.
+
+14. git revert <commit-hash> 👉 Revert a Specific Commit
+
+15. git checkout <commit-hash> -- path/to/file 👉  Revert a Specific File to Previous Version
+
+16. git reset --hard HEAD~1 👉 It resets your working directory and staging area to a specific commit, and deletes all uncommitted changes.
+⬆️ This removes the latest commit (goes 1 step back) and deletes all staged + unstaged changes
