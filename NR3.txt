@@ -1,0 +1,109 @@
+What is JSX?
+
+JSX is a syntax extension for JavaScript that allows developers to write HTML-like code within JavaScript.
+
+JSX serves as a bridge between JavaScript and HTML, providing a declarative and efficient way to define UI components in React. 
+By transforming HTML-like syntax into standard JavaScript objects, JSX enables developers to write clean, maintainable, and dynamic user interfaces. 
+Its integration with React's Virtual DOM ensures optimized rendering, making it a cornerstone of modern React development.
+
+
+How Does JSX Work?  JSX is not natively understood by browsers, so it undergoes a transformation process before being executed
+
+1. Writing JSX: Developers write JSX code within their React components. For example:
+
+const element = <h1 className="greeting">Hello, world!</h1>;
+
+2. Transformation by Babel: Tools like Babel transpile JSX into standard JavaScript. The above JSX code is transformed into
+
+const element = React.createElement(
+  'h1',
+  { className: 'greeting' },
+  'Hello, world!'
+);
+
+3. Creation of React Elements: 
+The React.createElement function creates a plain JavaScript object representing the React element. 
+This object describes the type of the element, its properties (props), and its children.
+
+4. Rendering to the DOM: 
+React takes this object and renders the corresponding HTML element to the DOM, ensuring efficient updates and rendering through its reconciliation process.
+
+
+
+✅ Advantages of JSX
+1. Easy to write, debug & maintain: 
+JSX allows writing HTML-like structure inside JavaScript, making UI code more readable, maintainable, and developer-friendly.
+
+2. Prevents Cross-Site Scripting (XSS) Attacks: 
+JSX safely handles all inputs or dynamic values added during runtime by converting them into plain text before rendering them in the DOM.
+This prevents malicious scripts from being executed, protecting the app from code injection attacks.
+
+
+const userInput = '<script>alert("XSS")</script>';
+<div>{userInput}</div>
+
+--> {userInput} is dynamic. JSX escapes this value and renders it as plain text, so it won’t execute any script.
+
+____________________________________________________________________________________________________________________________________________
+
+🧩 Step-by-Step Flow: React Virtual DOM vs Real DOM
+
+✅ Step 1: HTML File is Loaded
+Browser reads your HTML:
+
+<div id="root"></div>
+
+This is where React will mount your app.
+This creates the initial (empty) Real DOM.
+
+✅ Step 2: React & ReactDOM JS Files Are Loaded
+You include React & ReactDOM using CDN or bundler.
+
+These give access to:
+
+React.createElement() – creates Virtual DOM
+ReactDOM.createRoot() & root.render() – creates/updates Real DOM
+
+✅ Step 3: Your JSX/React Code Runs
+const heading = <h1>Hello React</h1>
+
+JSX is compiled to: React.createElement("h1", null, "Hello React")
+This returns a Virtual DOM object (a plain JavaScript object).
+
+🔹 So now: ✅ 1st Virtual DOM is created.
+
+✅ Step 4: ReactDOM Renders It
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(heading);
+
+ReactDOM takes that Virtual DOM.
+
+It creates the Real DOM elements and places them inside the <div id="root">.
+
+Now the Real DOM is created and displayed in the browser.
+
+✅ Step 5: Later – React Triggers Update --> When something changes (like state or props):
+
+React creates a new Virtual DOM representing the new UI.
+
+✅ Step 6: React Diffs the Virtual DOMs
+React compares:
+
+🟡 New Virtual DOM (after state/prop change)
+
+🔵 Old Virtual DOM (before the change)
+
+Finds differences → Diffing Algorithm
+
+✅ Step 7: ReactDOM Updates Real DOM
+Only the changed parts are updated in the browser’s DOM.
+
+No need to reload or redraw everything!
+
+This makes React fast & efficient.
+
+____________________________________________________________________________________________________________________________________________
+
+
+
